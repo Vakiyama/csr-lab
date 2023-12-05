@@ -2,13 +2,25 @@
     display: block;
     justify-content: space-between;
     align-items: center;
-  }
-  
-  .container {
-    height: 90vh;
-  }
+}
 
-  li:hover {
+.container {
+    height: 90vh;
+}
+
+li:hover {
     cursor: pointer;
-  }
-  
+}
+
+table {
+    display: flex;
+}
+
+tr {
+    display: flex;
+    justify-content: space-between;
+}
+
+tbody {
+    width: 100%;
+}

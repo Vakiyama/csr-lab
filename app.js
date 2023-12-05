@@ -10,16 +10,18 @@ const filter_input = document.querySelector("#filter");
     * - cleared: boolean,
 */
 
-const movieState = [];
+const previouslyStored = localStorage.getItem("movieState") 
+let movieState = localStorage.getItem("movieState") ? localSto
 
 function handleAddMovie() {
     const inputText = movieInput_input.value;
     addMovieToHistory(inputText);
     clearMovieInput();
+    localStorage.setItem("movieState", movieState);
 }
 
 function incrementMovieHistory(movieIndex) {
-    movieHistory[movieIndex] += movieHistory[movieIndex];
+    movieState[movieIndex].timesWatched += 1;
     renderMovies(movieState);
     return;
 }
@@ -32,9 +34,11 @@ function addMovieToHistory(inputText) {
         movieState.push({
             title: inputText,
             timesWatched: 0,
+            cleared: false,
         });
+        renderMovies();
     }
-    renderMovies(movieState);
+    renderMovieHistory();
 }
 
 function clearMovieInput() {
@@ -60,7 +64,9 @@ function addMovie(userTypedText) {
 
 function filterMovies() {
     const textInput = filter_input.value;
-    const filteredMovies = movieState.filter(movie => movie.title.includes(textInput));
+    const filteredMovies = movieState.filter(movie => { 
+        return movie.title.includes(textInput) && !movie.cleared;
+    });
     return filteredMovies;
 }
 
@@ -68,16 +74,33 @@ filter_input.addEventListener("input", renderMovies);
 
 function renderMovies() {
     myMovieList_ul.innerHTML = '';
-    const filteredMovies = filterMovies(cleared === true);
+    const filteredMovies = filterMovies(movie => movie.cleared === true);
     filteredMovies.map(movie => addMovie(movie.title));
 }
 
 function renderMovieHistory() {
-
+    const tableRows = movieState.map(movie => {
+       return `
+            <tr>
+                <td>${movie.title}</td>
+                <td>${movie.timesWatched}</td>
+            </tr>
+        ` 
+    }).join("");
+    
+    movieHistoryCard.innerHTML = createTable(tableRows);
 }
 
-function removeElement() {
-}
-
-function createTable() {
+function createTable(tableRows) {
+    return `
+        <h5 class="card-title">Movie History</h5>
+        <table>
+           <tbody class="movie-history"> 
+                <tr>
+                    <th>Movie</th>
+                    <th>Times Watched</th>
+                </tr>
+                ${tableRows}
+            </tbody>
+        </table>`
 }
