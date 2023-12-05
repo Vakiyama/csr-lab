@@ -10,14 +10,16 @@ const filter_input = document.querySelector("#filter");
     * - cleared: boolean,
 */
 
-const previouslyStored = localStorage.getItem("movieState") 
-let movieState = localStorage.getItem("movieState") ? localSto
+const previouslyStored = JSON.parse(localStorage.getItem("movieState")); 
+let movieState = previouslyStored ? previouslyStored : [];
+renderMovies();
+renderMovieHistory();
 
 function handleAddMovie() {
     const inputText = movieInput_input.value;
     addMovieToHistory(inputText);
     clearMovieInput();
-    localStorage.setItem("movieState", movieState);
+    localStorage.setItem("movieState", JSON.stringify(movieState));
 }
 
 function incrementMovieHistory(movieIndex) {
@@ -51,6 +53,7 @@ function clearMovies() {
         movie.cleared = true;
         return movie;
     });
+    localStorage.setItem("movieState", JSON.stringify(movieState));
 }
 
 addMovie_button.addEventListener("mouseup", handleAddMovie);
