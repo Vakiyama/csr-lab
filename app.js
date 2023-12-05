@@ -5,11 +5,12 @@ const filter_input = document.querySelector("#filter");
 
 /* 
     * Movie:
-    * - title: string
-    * - timesWatched: number
+    * - title: string,
+    * - timesWatched: number,
+    * - cleared: boolean,
 */
 
-const movieHistory = [];
+const movieState = [];
 
 function handleAddMovie() {
     const inputText = movieInput_input.value;
@@ -18,23 +19,22 @@ function handleAddMovie() {
 }
 
 function incrementMovieHistory(movieIndex) {
-    movieHistory[movieIndex].timesWatched += movieHistory[movieIndex].timesWatched + 1;
-    renderMovies(movieHistory);
+    movieHistory[movieIndex] += movieHistory[movieIndex];
+    renderMovies(movieState);
     return;
 }
 
-
 function addMovieToHistory(inputText) {
-    const movieIndex = movieHistory.findIndex(movie => movie.title === inputText);
+    const movieIndex = movieState.findIndex(movie => movie.title === inputText);
     if (movieIndex !== -1) {
         incrementMovieHistory(movieIndex);
     } else {
-        movieHistory.push({
+        movieState.push({
             title: inputText,
             timesWatched: 0,
         });
     }
-    renderMovies(movieHistory);
+    renderMovies(movieState);
 }
 
 function clearMovieInput() {
@@ -43,6 +43,10 @@ function clearMovieInput() {
 
 function clearMovies() {
     myMovieList_ul.innerHTML = '';
+    movieState = movieState.map(movie => {
+        movie.cleared = true;
+        return movie;
+    });
 }
 
 addMovie_button.addEventListener("mouseup", handleAddMovie);
@@ -56,7 +60,7 @@ function addMovie(userTypedText) {
 
 function filterMovies() {
     const textInput = filter_input.value;
-    const filteredMovies = movieHistory.filter(movie => movie.title.includes(textInput));
+    const filteredMovies = movieState.filter(movie => movie.title.includes(textInput));
     return filteredMovies;
 }
 
@@ -64,8 +68,12 @@ filter_input.addEventListener("input", renderMovies);
 
 function renderMovies() {
     myMovieList_ul.innerHTML = '';
-    const filteredMovies = filterMovies();
+    const filteredMovies = filterMovies(cleared === true);
     filteredMovies.map(movie => addMovie(movie.title));
+}
+
+function renderMovieHistory() {
+
 }
 
 function removeElement() {
