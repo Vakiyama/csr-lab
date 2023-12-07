@@ -35,7 +35,7 @@ function addMovieToHistory(inputText) {
     } else {
         movieState.push({
             title: inputText,
-            timesWatched: 0,
+            timesWatched: 1,
             cleared: false,
         });
         renderMovies();
